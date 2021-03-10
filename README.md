@@ -152,13 +152,86 @@ MAC Address: 00:0C:29:0D:B7:67 (VMware)
 
 ## 3. Enumeración
 
+> La enumetación de GOBUSTER no arroja nada importante ni escanenandolo de manera directa ni a través del PROXY. 
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower2.jpg" width=80% />
+
+```
+root@kali:~/SKYTOWER/autorecon/10.10.10.134/scans# gobuster dir -u http://10.10.10.134 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt -p http://10.10.10.134:3128
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.10.134
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] Proxy:          http://10.10.10.134:3128
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/03/10 17:43:16 Starting gobuster
+===============================================================
+/index (Status: 200)
+/background (Status: 200)
+===============================================================
+2021/03/10 17:43:57 Finished
+===============================================================
+root@kali:~/SKYTOWER/autorecon/10.10.10.134/scans# gobuster dir -u http://10.10.10.134 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.10.134
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/03/10 17:44:10 Starting gobuster
+===============================================================
+/background (Status: 200)
+/index (Status: 200)
+```
+
+## 4. Identificación de Vulnerabilidades
+
+### 4.1. Inyección SQL
+
+- Al parecer no hay nada importante en el proceso de enumeración sobre la página web.
+- El puerto TCP/22 del servicio SSH esta abierto a través del PROXY. Una opción sería ejecutar un ataque de diccionario.
+- Veamos que tiene el portal web. Lo primero que intentamos es una inyección SQL, al parecer si hay SQLi.
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower3.jpg" width=80% />
+
+- Llama la atención el mensaje de error que dice que hay un error cerca de 11. Nunca escribimos 11.
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower4.jpg" width=80% />
+
+- Lo que ocurre es que el sistema está filtrado palabras. Eliminar la palabra "OR", el igual ("=") y los guiones de comentarios ("-- "). 
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower5.jpg" width=80% />
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower6.jpg" width=80% />
+
+- Debemos buscar algun reemplazo para las palabras filtradas. Es un tema de ensayo/error. 
+- Reemplazamos así: OR por || , = por LIKE y "-- " por #. 
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower7.jpg" width=80% />
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower8.jpg" width=80% />
+
+### 4.2. Acceso a través de SSH
+
+- El mensaje obtenido indica lo siguiente: Todos los usuarios deben iniciar sesión a través de SSH y nos dan una cuenta. Probemos el acceso SSH a través del PROXY.
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower9.jpg" width=80% />
+
+Importante: Debemos añadir al final "/bin/sh" sino la conexión se cierra de inmediato.
 
 
-
-
-
-
-
+## 5. Elevar Privilegios
 
 
 
