@@ -145,6 +145,8 @@ PORT   STATE SERVICE
 22/tcp open  ssh
 MAC Address: 00:0C:29:0D:B7:67 (VMware)
 ```
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower1.jpg" width=80% />
+
 
 - A través del PROXY podemos acceder al puerto TCP/22 del servicio SSH.
 
